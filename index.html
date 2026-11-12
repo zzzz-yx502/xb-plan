@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#185FA5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="小宝计划">
+<title>小宝成长计划</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,'HarmonyOS Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background:#FBF3DC;color:#2C2C2A;padding-top:calc(54px + env(safe-area-inset-top));padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+header{position:fixed;top:0;left:0;right:0;z-index:30;background:#185FA5;color:#fff;padding:calc(9px + env(safe-area-inset-top)) 16px 9px;display:flex;justify-content:space-between;align-items:center}
+header .tl{font-size:16.5px;font-weight:700;letter-spacing:.5px}
+header .tb{font-size:11.5px;background:rgba(255,255,255,.18);border-radius:11px;padding:3px 10px}
+main{max-width:640px;margin:0 auto;padding:13px 14px 24px}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#fff;border-top:1px solid #E8E0C8;display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom);height:calc(62px + env(safe-area-inset-bottom))}
+.navend{flex:0 0 66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:#888780;background:none;border:none}
+.navend svg{width:22px;height:22px}
+.navend.on{color:#185FA5;font-weight:700}
+.strip{flex:1;display:flex;overflow-x:auto;gap:6px;padding:8px 4px;align-items:center;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.strip::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;padding:4px 10px;border-radius:14px;background:#F3EDD6;border:1px solid #E3DBBE;font-size:10.5px;line-height:1.35;color:#8B8478;text-align:center;white-space:nowrap}
+.chip b{display:block;font-size:12px;font-weight:700;color:#4A4740}
+.chip.on{background:#185FA5;border-color:#185FA5;color:#CFE4F8}
+.chip.on b{color:#fff}
+.card{background:#fff;border-radius:14px;margin-bottom:13px;overflow:hidden;border:1px solid #F0E8CF}
+.card .hd{padding:11px 14px 10px;border-bottom:1px solid #F4EEDC;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.hd b{font-size:14.5px;font-weight:700;color:#0C447C}
+.hd .cnt{font-size:12px;color:#185FA5;background:#E6F1FB;border-radius:10px;padding:2px 9px;white-space:nowrap;font-weight:700}
+.sub{font-size:12px;color:#888780;padding:9px 14px 0;line-height:1.7}
+.item{position:relative;display:flex;gap:10px;padding:10px 14px;border-bottom:1px solid #F8F3E3;cursor:pointer;align-items:flex-start}
+.item:last-child{border-bottom:none}
+.cb{flex:0 0 21px;width:21px;height:21px;border:2px solid #B5D4F4;border-radius:7px;margin-top:1px;position:relative;transition:background .15s,border-color .15s}
+.item.done .cb{background:#185FA5;border-color:#185FA5;animation:pop .3s}
+@keyframes pop{45%{transform:scale(1.25) rotate(-7deg)}}
+.item.done .cb:after{content:"";position:absolute;left:5.5px;top:1.5px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+.tx{flex:1;font-size:13.5px;line-height:1.6;color:#2C2C2A;transition:color .25s}
+.item.done .tx{color:#B7B3A6;text-decoration:line-through;text-decoration-color:rgba(153,27,27,.82);text-decoration-thickness:1.5px}
+.item.done .tx .pid{border-bottom-color:transparent}
+.tg{font-style:normal;font-size:10.5px;font-weight:700;border-radius:4px;padding:1px 5px;margin-right:6px;vertical-align:1px;text-decoration:none}
+.tg-A{background:#E6F1FB;color:#185FA5}.tg-B{background:#FAEEDA;color:#854F0B}.tg-C{background:#FCEBEB;color:#A32D2D}.tg-D{background:#F1EFE8;color:#5F5E5A}.tg-E{background:#EAF3DE;color:#3B6D11}
+.pid{color:#185FA5;font-weight:700;text-decoration:none;border-bottom:1px dashed #85B7EB}
+.dim{font-size:10.5px;color:#8B8478;background:#F1EFE8;border-radius:4px;padding:1px 5px;margin-left:5px;white-space:nowrap}
+.hero{background:#185FA5;border-radius:16px;color:#fff;padding:15px 16px;margin-bottom:13px}
+.hero .dt{font-size:21px;font-weight:700}
+.hero .wk{font-size:12px;background:rgba(255,255,255,.18);border-radius:10px;padding:3px 10px;display:inline-block;margin-top:7px;line-height:1.5}
+.hero .pwrap{margin-top:11px}
+.plabel{font-size:11px;color:rgba(255,255,255,.88);margin:0 0 4px;display:flex;justify-content:space-between}
+.pbar{height:13px;background:#F1E9CE;border-radius:6.5px;overflow:hidden}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,#5CB3E4,#185FA5);border-radius:6.5px;transition:width .4s}
+.hero .pbar{background:rgba(255,255,255,.25)}
+.hero .pbar i{background:#FFD666}
+.plabel2{font-size:11px;color:#5F5E5A;margin:6px 0 4px;display:flex;justify-content:space-between}
+.pwrap2{padding:4px 15px 12px}
+.week{background:#fff;border-radius:14px;margin-bottom:12px;overflow:hidden;border:1px solid #F0E8CF}
+.wk-hd{padding:11px 14px;cursor:pointer}
+.wk-hd .r1{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.wk-hd .no{font-weight:700;color:#0C447C;font-size:14px}
+.wk-hd .sp{font-size:11px;color:#9B9482}
+.wk-hd .tp{font-size:12.5px;color:#5F5E5A;margin-top:3px;line-height:1.55}
+.wk-hd .tp b{color:#2C2C2A}
+.wk-body{display:none;border-top:1px dashed #E8E0C8}
+.week.open .wk-body{display:block}
+.day{border-bottom:1px solid #F4EEDC}
+.day:last-child{border-bottom:none}
+.day.today{background:#FFFDF2;box-shadow:inset 3px 0 0 #EF9F27}
+.dh{display:flex;gap:8px;padding:8px 14px;background:#FBF6E4;font-size:12px;color:#854F0B;border-bottom:1px solid #F4EEDC;align-items:baseline;justify-content:space-between}
+.dh b{font-size:12.5px}
+.dh .cnt{font-weight:700;color:#854F0B}
+.rvrow{font-size:11.5px;color:#8B8478;background:#FBF6E4;padding:7px 14px;border-top:1px dashed #E8E0C8;line-height:1.6}
+.lb{display:inline-block;font-size:11.5px;color:#0C447C;background:#E6F1FB;border-radius:7px;padding:3px 10px;margin:10px 14px 0;font-weight:700}
+.rvstat{font-size:12.5px;color:#5F5E5A;background:#FBF6E4;border-radius:8px;padding:8px 12px;margin:10px 14px 0;line-height:1.7}
+.rvstat b{color:#854F0B}
+.stg{background:#E6F1FB;border:1px solid #B5D4F4;border-radius:14px;padding:13px 0 0;margin-bottom:13px}
+.stg h2{font-size:16px;color:#0C447C;font-weight:700;margin:0 15px 2px}
+.stg .tm{font-size:11.5px;color:#185FA5;margin:0 15px 8px}
+.stg .row{font-size:12.5px;line-height:1.7;color:#2C2C2A;padding:4px 15px;border-top:1px dashed #CBE0F4}
+.stg .row b{color:#0C447C}
+.tiers{display:flex;justify-content:space-between;padding:12px 10px 6px}
+.tier{flex:1;text-align:center;opacity:.4;transition:opacity .3s}
+.tier.hit{opacity:1}
+.tier .ring{width:32px;height:32px;border-radius:50%;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;border:2.5px solid #ccc;background:#fff}
+.tier .nm{font-size:10.5px;color:#5F5E5A}
+.tier.hit .nm{color:#2C2C2A;font-weight:700}
+.r-brz .ring{border-color:#C88A5A;color:#A96A3B}.r-slv .ring{border-color:#9FAAB5;color:#74808C}.r-gld .ring{border-color:#E5B93C;color:#A8862B}.r-pla .ring{border-color:#4EA7C9;color:#2C7FA5}.r-dia .ring{border-color:#7F77DD;color:#534AB7}.r-sta .ring{border-color:#EF9F27;color:#BA7517}
+.bigTier{text-align:center;padding:2px 14px 12px}
+.bigTier .bn{font-size:17px;font-weight:700;color:#0C447C}
+.bigTier .bs{font-size:12px;color:#888780;margin-top:2px}
+.btnrow{display:flex;gap:10px;margin:2px 0 16px}
+.btn{flex:1;background:#185FA5;color:#fff;border:none;border-radius:12px;padding:12px 8px;font-size:14px;font-weight:700}
+.btn.ghost{background:#fff;color:#185FA5;border:1.5px solid #185FA5}
+.note{font-size:12px;color:#7A7466;background:#FBF6E4;border-radius:9px;padding:9px 12px;margin:10px 14px;line-height:1.7}
+.res .tx b{font-weight:700}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:rgba(44,44,42,.92);color:#fff;font-size:13px;border-radius:20px;padding:9px 18px;opacity:0;transition:.3s;pointer-events:none;z-index:40;max-width:82%;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.lh-top{background:#185FA5;border-radius:16px;color:#fff;padding:16px;margin-bottom:13px}
+.lh-top .q{font-size:19px;font-weight:700;line-height:1.5}
+.lh-top .a{font-size:12.5px;opacity:.85;margin-top:8px;line-height:1.8}
+.qa{padding:11px 14px;border-bottom:1px solid #F4EEDC;font-size:13px;line-height:1.75}
+.qa:last-child{border-bottom:none}
+.qa b{color:#0C447C;display:block;margin-bottom:2px;font-size:13.5px}
+.mrow{display:flex;gap:8px;padding:10px 14px;border-bottom:1px solid #F4EEDC;font-size:12.5px;line-height:1.65}
+.mrow:last-child{border-bottom:none}
+.mrow .mm{flex:0 0 34px;font-weight:800;color:#185FA5}
+.mrow .mc{flex:1}
+.mrow .mc .maintain{font-size:11px;color:#3B6D11;background:#EAF3DE;border-radius:4px;padding:1px 6px;display:inline-block;margin-top:3px}
+.empty{padding:26px 20px;text-align:center;font-size:13px;color:#888780;line-height:1.8}
+</style>
+</head>
+<body>
+<header><span class="tl">小宝成长计划</span><span class="tb" id="hTier">青铜 · 0 题</span></header>
+<main id="view"></main>
+<nav>
+<button class="navend" id="navToday" onclick="go('today')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>今日</button>
+<div class="strip" id="strip"></div>
+<button class="navend" id="navLh" onclick="go('lh')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21l1-11h4l1 11z" fill="currentColor" opacity=".25"/><path d="M8 10h8M9 21h6M10.5 4h3l.6 3h-4.2zM12 1.5v2.5M12 7l6-4M12 9l6 2"/></svg>灯塔</button>
+</nav>
+<div id="toast"></div>
+<script>
+'use strict';
+var LS='xbapp-v2';
+var S={items:{},extra:0};
+try{var _s=JSON.parse(localStorage.getItem(LS)||'{}');if(_s&&typeof _s==='object'){S.items=_s.items||{};S.extra=_s.extra||0}}catch(e){}
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}
+}
+function done(id){return !!S.items[id]}
+function isDone(id){return done(id)?' done':''}
+
+/* 条目工厂：A 学 / B 题(计段位) / C 赛(计段位) / D 任 / E 选 */
+function T(s){return{t:'A',s:s}}
+function P(pid,s){return{t:'B',s:s,p:pid}}
+function R(pid,s){return{t:'E',s:s,p:pid}}
+function K(s){return{t:'D',s:s}}
+function M(s){return{t:'C',s:s}}
+function W(s){return{t:'B',s:s}}
+
+/* ============ 数据：第一学期 16 周竞赛线（周日统一为复盘日） ============ */
+var WEEKS=[
+{n:1,topic:'C++ 竞赛语法强化 + STL 复习',span:'10.05 – 10.11',goal:'底线 6 · 理想 10 · 周六首场模拟赛',days:[
+ {dw:'周一',dt:'2026-10-05',items:[T('快读快写、typedef / using、结构体 + 自定义 cmp、lambda'),P('P1177','【模板】排序 · sort + cmp')]},
+ {dw:'周二',dt:'2026-10-06',items:[T('多关键字排序'),P('P5740','最厉害的学生'),P('P1093','奖学金')]},
+ {dw:'周三',dt:'2026-10-07',items:[T('字符串处理与坑点'),P('P1104','生日'),P('P1553','数字反转（升级版）')]},
+ {dw:'周四',dt:'2026-10-08',items:[T('位运算入门：与或非、移位'),P('P1100','高低位交换'),P('P1469','找筷子（异或性质）')]},
+ {dw:'周五',dt:'2026-10-09',items:[P('P1051','谁拿了最多奖学金（大模拟，练耐心与边界）')]},
+ {dw:'周六',dt:'2026-10-10',items:[M('模拟赛 1（3h，严格计分）'),P('P1059','明明的随机数'),P('P1068','分数线划定'),P('P1094','纪念品分组'),P('P1223','排队接水'),K('赛后补题'),K('工程线 3h（Linux / Git / CMake）')]}
+]},
+{n:2,topic:'STL 进阶：堆 / set / map / 哈希 / bitset',span:'10.12 – 10.18',goal:'底线 6 · 理想 10 ｜ 本学期最关键的一周之一',days:[
+ {dw:'周一',dt:'2026-10-12',items:[T('set / multiset 全套操作、erase 的坑、lower_bound'),P('P1059','用 set 重做（排序去重）')]},
+ {dw:'周二',dt:'2026-10-13',items:[T('map 的 operator[] 与 first / second 遍历'),P('P2580','于是他错误的点名开始了'),P('P1097','统计数字')]},
+ {dw:'周三',dt:'2026-10-14',items:[T('unordered 系列与哈希卡常问题'),P('P1102','A-B 数对')]},
+ {dw:'周四',dt:'2026-10-15',items:[T('priority_queue、greater 写法、自定义比较器'),P('P1090','合并果子（小根堆 + 贪心）'),P('P1631','序列合并')]},
+ {dw:'周五',dt:'2026-10-16',items:[T('对顶堆原理（手推一遍）、bitset 用法'),P('P1168','中位数（对顶堆）'),P('P2085','最小函数值')]},
+ {dw:'周六',dt:'2026-10-17',items:[M('模拟赛 2（3h）'),P('P4387','验证栈序列'),P('P1449','后缀表达式'),P('P1914','小书童——密码'),K('自选 1 题重做 + 赛后补题'),K('工程线 3h')]}
+]},
+{n:3,topic:'递归、DFS/BFS、手写堆、二叉搜索树',span:'10.19 – 10.25',goal:'底线 6 · 理想 10 ｜ 搜索是一切算法的地基',days:[
+ {dw:'周一',dt:'2026-10-19',items:[T('递归与递归树、DFS 函数框架'),P('P1596','Lake Counting'),P('P1451','求细胞数量')]},
+ {dw:'周二',dt:'2026-10-20',items:[T('洪水填充'),P('P1162','填涂颜色')]},
+ {dw:'周三',dt:'2026-10-21',items:[T('回溯三步（标记-递归-撤销）与剪枝'),P('P1101','单词方阵'),P('P1025','数的划分（DFS 剪枝）')]},
+ {dw:'周四',dt:'2026-10-22',items:[T('BFS 框架与最短路性质、二叉搜索树（中序有序）'),P('P1443','马的遍历'),P('P1135','奇怪的电梯')]},
+ {dw:'周五',dt:'2026-10-23',items:[T('连通块记忆化'),P('P1141','01 迷宫（BFS + 记忆化）')]},
+ {dw:'周六',dt:'2026-10-24',items:[T('手写二叉堆（数组模拟上浮 / 下沉）'),K('用手写堆重做 P1090'),M('模拟赛 3'),P('P1605','迷宫（DFS 计数）'),P('P1746','离开中山路（BFS 最短路）'),R('P3956','[HYBZ] 计算系数（选做）'),K('工程线 3h')]}
+]},
+{n:4,topic:'并查集 + 数学基础（快速幂 / 筛 / gcd）',span:'10.26 – 11.01',goal:'底线 5 · 理想 7 ｜ 阶段一收官',days:[
+ {dw:'周一',dt:'2026-10-26',items:[T('并查集思想、find 递归、路径压缩'),P('P3367','【模板】并查集')]},
+ {dw:'周二',dt:'2026-10-27',items:[T('按秩合并（了解）、扩展域思想（预讲）'),P('P1551','亲戚')]},
+ {dw:'周三',dt:'2026-10-28',items:[P('P1111','修复公路（并查集判连通）'),R('P1892','团伙（扩展域，选做）')]},
+ {dw:'周四',dt:'2026-10-29',items:[T('快速幂与模运算'),P('P1226','【模板】快速幂'),P('P3383','【模板】线性筛素数')]},
+ {dw:'周五',dt:'2026-10-30',items:[T('gcd / lcm、素数筛'),P('P1372','又是毕业季 I（gcd 性质）'),P('P5723','质数口袋')]},
+ {dw:'周六',dt:'2026-10-31',items:[M('模拟赛 4（本周内容混合）+ 补题'),K('阶段一验收：全部错题过一遍'),K('工程线 3h')]}
+]},
+{n:5,topic:'图论入门：存储、遍历、拓扑排序',span:'11.02 – 11.08',goal:'底线 4 · 理想 6 ｜ 图论三连第一周',days:[
+ {dw:'周一',dt:'2026-11-02',items:[T('邻接矩阵 / 邻接表 / 链式前向星、图 DFS 与 BFS'),P('P5318','查找文献')]},
+ {dw:'周二',dt:'2026-11-03',items:[P('P3916','图的遍历（反向建图）')]},
+ {dw:'周三',dt:'2026-11-04',items:[T('拓扑排序（入度表 + 队列）'),P('P1113','杂务（拓扑 DP）')]},
+ {dw:'周四',dt:'2026-11-05',items:[P('P4017','最大食物链计数（拓扑 + 计数 + 取模）')]},
+ {dw:'周五',dt:'2026-11-06',items:[P('P2895','Meteor Shower（BFS 综合变体）'),R('P2661','信息传递（图找最小环，选做）')]},
+ {dw:'周六',dt:'2026-11-07',items:[M('模拟赛 5（图论综合）+ 补题'),K('工程线 3h')]}
+]},
+{n:6,topic:'最短路：Dijkstra / SPFA / Floyd',span:'11.09 – 11.15',goal:'底线 3 · 理想 4 ｜ 题少而重：三个算法各自什么时候用，必须能一句话说清',days:[
+ {dw:'周一',dt:'2026-11-09',items:[T('Dijkstra 贪心与松弛（先在纸上手推样例）'),P('P3371','单源最短路径（弱化版，朴素 Dijkstra）')]},
+ {dw:'周二',dt:'2026-11-10',items:[T('堆优化 Dijkstra（与第 2 周堆呼应）'),P('P4779','单源最短路径（标准版，堆优化）')]},
+ {dw:'周三',dt:'2026-11-11',items:[P('P1144','最短路计数（变式）')]},
+ {dw:'周四',dt:'2026-11-12',items:[T('Floyd（三重循环 + 中转点顺序）'),P('P1119','灾后重建（Floyd 分阶段）')]},
+ {dw:'周五',dt:'2026-11-13',items:[T('SPFA 与负权边适用性（了解）'),K('重做 P3371（SPFA 写法）'),R('P1462','通往奥格瑞玛的道路（二分 + 最短路，选做）')]},
+ {dw:'周六',dt:'2026-11-14',items:[M('模拟赛 6（最短路综合）+ 补题'),K('工程 3h：Git 入门——建 GitHub 仓库 acm-2026（init / add / commit / push）')]}
+]},
+{n:7,topic:'最小生成树：Kruskal / Prim',span:'11.16 – 11.22',goal:'底线 3 · 理想 5 ｜ 图论三连收官',days:[
+ {dw:'周一',dt:'2026-11-16',items:[T('Kruskal（排序 + 并查集，与第 4 周呼应）'),P('P3366','【模板】最小生成树（Kruskal 版）')]},
+ {dw:'周二',dt:'2026-11-17',items:[T('Prim（与 Dijkstra 对比记忆）'),K('P3366 用 Prim 版重做')]},
+ {dw:'周三',dt:'2026-11-18',items:[P('P2820','局域网（MST 删边应用）')]},
+ {dw:'周四',dt:'2026-11-19',items:[T('MST 性质（第 k 长边的意义）'),P('P2330','繁忙的都市')]},
+ {dw:'周五',dt:'2026-11-20',items:[R('P4047','部落划分（MST 第 k 长边经典应用，选做）')]},
+ {dw:'周六',dt:'2026-11-21',items:[M('图论综合模拟赛 7（遍历 + 最短路 + MST 混合）+ 补题'),K('工程 3h：已做题整理进仓库（每题一文件夹：代码 + 一句话题解）')]}
+]},
+{n:8,topic:'贪心算法 + 全学期错题大复盘',span:'11.23 – 11.29',goal:'底线 3 + 错题清零 · 理想 5 ｜ 中期节点',days:[
+ {dw:'周一',dt:'2026-11-23',items:[T('贪心与交换论证思路'),P('P1223','排队接水（限时重做）'),P('P1094','纪念品分组（限时重做）')]},
+ {dw:'周二',dt:'2026-11-24',items:[P('P4995','跳跳！（排序贪心快题）')]},
+ {dw:'周三',dt:'2026-11-25',items:[T('区间贪心（按右端点排序）'),P('P1803','凌乱的 yyy / 线段覆盖')]},
+ {dw:'周四',dt:'2026-11-26',items:[K('重做 P1090（贪心 + 堆的双重视角）')]},
+ {dw:'周五',dt:'2026-11-27',items:[K('错题大复盘：前 8 周全部错题逐题重做')]},
+ {dw:'周六',dt:'2026-11-28',items:[M('模拟赛 8 + 错题清零验收'),K('工程 3h：WSL 安装 + Linux 常用命令 + g++ 编译运行')]}
+]},
+{n:9,topic:'DP 入门：线性 DP + 背包全家桶',span:'11.30 – 12.06',goal:'底线 5 · 理想 8 ｜ 背包五兄弟一周过手',days:[
+ {dw:'周一',dt:'2026-11-30',items:[T('DP 三要素复习'),P('P1216','数字三角形'),P('P1115','最大子段和')]},
+ {dw:'周二',dt:'2026-12-01',items:[T('01 背包（体积逆序的原因亲手改出来）'),K('限时 15 分钟重做 P1048 采药、P1060 开心的金明')]},
+ {dw:'周三',dt:'2026-12-02',items:[T('完全背包（体积正序）'),P('P1616','疯狂的采药')]},
+ {dw:'周四',dt:'2026-12-03',items:[T('多重背包（二进制拆分）'),P('P1776','宝物筛选')]},
+ {dw:'周五',dt:'2026-12-04',items:[T('混合背包 + 分组背包'),P('P1833','樱花（混合）'),P('P1757','通天之分组背包')]},
+ {dw:'周六',dt:'2026-12-05',items:[M('背包综合模拟赛 9'),R('P1064','金明的预算方案（有依赖背包，选做）'),K('工程 3h：gdb 断点调试实战（挑一道 WA 的题调通）')]}
+]},
+{n:10,topic:'DP 进阶：区间 DP + 树形 DP',span:'12.07 – 12.13',goal:'底线 3 · 理想 5 ｜ 基础算法全系至此收官',days:[
+ {dw:'周一',dt:'2026-12-07',items:[T('区间 DP 框架（枚举长度 + 断点）'),P('P1880','石子合并（环形拆链技巧）')]},
+ {dw:'周二',dt:'2026-12-08',items:[K('限时重做 P1063 能量项链（一年前学过）')]},
+ {dw:'周三',dt:'2026-12-09',items:[P('P1220','关路灯（区间 DP 进阶）')]},
+ {dw:'周四',dt:'2026-12-10',items:[T('树形 DP（与第 3 周树遍历呼应）'),P('P1352','没有上司的舞会')]},
+ {dw:'周五',dt:'2026-12-11',items:[P('P2014','选课（树形背包）')]},
+ {dw:'周六',dt:'2026-12-12',items:[M('DP 综合模拟赛 10 + 补题'),K('工程 3h：Makefile 入门（给模板库写第一个 Makefile）')]}
+]},
+{n:11,topic:'单调栈、单调队列、ST 表、离散化',span:'12.14 – 12.20',goal:'底线 4 · 理想 6 ｜ 竞赛与面试双料考点',days:[
+ {dw:'周一',dt:'2026-12-14',items:[T('单调栈（最近更大 / 更小元素）'),P('P5788','【模板】单调栈'),P('P1901','发射站')]},
+ {dw:'周二',dt:'2026-12-15',items:[T('单调队列（滑动窗口最值）'),P('P1886','滑动窗口'),P('P1440','求 m 区间内的最小值')]},
+ {dw:'周三',dt:'2026-12-16',items:[T('ST 表（倍增求 RMQ）'),P('P3865','【模板】ST 表')]},
+ {dw:'周四',dt:'2026-12-17',items:[K('P1816 忠诚：ST 与线段树两种写法都写')]},
+ {dw:'周五',dt:'2026-12-18',items:[T('离散化（大数据范围 → 下标压缩）'),R('P1496','火烧赤壁（选做）')]},
+ {dw:'周六',dt:'2026-12-19',items:[M('模拟赛 11 + 补题'),K('工程 3h：CMake 入门（模板整理成小工程）')]}
+]},
+{n:12,topic:'字典树 Trie + 分块思想（期末临近，题量减半）',span:'12.21 – 12.27',goal:'底线 2 · 理想 3 ｜ 分块只求理解思想',days:[
+ {dw:'周一',dt:'2026-12-21',items:[T('Trie 的插入与查询'),P('P8306','【模板】字典树')]},
+ {dw:'周二',dt:'2026-12-22',items:[K('用 Trie 重做 P2580（对比 map 版差异）')]},
+ {dw:'周三',dt:'2026-12-23',items:[R('P4551','最长异或路径（Trie 上贪心，选做）')]},
+ {dw:'周四',dt:'2026-12-24',items:[K('分块：读入门博客 + 手写「区间加、单点查」（理解即可，不强求 AC）')]},
+ {dw:'周五',dt:'2026-12-25',items:[K('自选复习 / 错题')]},
+ {dw:'周六',dt:'2026-12-26',items:[M('模拟赛 12 + 补题'),K('工程 3h：专题模板包①（二分 / 前缀和）整理入仓库')]}
+]},
+{n:13,topic:'线段树基础（期末缓冲执行）',span:'12.28 – 01.03',goal:'底线 1 · 理想 2 ｜ 期末优先，学不完寒假补：不赶进度',days:[
+ {dw:'周一',dt:'2026-12-28',items:[T('线段树原理（单点修改、区间查询、pushup）'),P('P3372','【模板】线段树 1（先写基础版）')]},
+ {dw:'周二',dt:'2026-12-29',items:[K('P1816 线段树版重做（与 ST 表对比）')]},
+ {dw:'周三起',dt:'2026-12-30',items:[K('期末复习为主，每天最多 1 题保持手感；周六模拟赛照常（用已学内容组卷）')]}
+]},
+{n:14,topic:'线段树懒标记 + 树链剖分（了解）',span:'01.04 – 01.10',goal:'底线 0 · 理想 1 ｜ 期末优先',days:[
+ {dw:'周一',dt:'2027-01-04',items:[T('懒标记（lazy propagation 原理手推一遍）'),R('P3373','【模板】线段树 2（双懒标记，选做）')]},
+ {dw:'周二',dt:'2027-01-05',items:[K('树链剖分概念阅读（15 分钟：知道解决什么问题、依赖什么即可）')]},
+ {dw:'周三起',dt:'2027-01-06',items:[K('期末复习；每天 1 道错题重做')]}
+]}
+];
+
+var W0=[
+ T('查校队选拔机制：向辅导员 / 学长 / 算法社团打听——选拔在几月、什么形式、寒假集训安排。今天在班级群问一句即可'),
+ T('注册三个账号：洛谷 luogu.com.cn、Codeforces codeforces.com、GitHub github.com'),
+ T('搭建环境：Windows 开启 WSL2 + Ubuntu；VS Code 装 C/C++ 扩展连通 WSL；git config 用户名邮箱'),
+ T('建第一个仓库：GitHub 新建 acm-2026，写 README（目标、起点蓝桥杯省二、开始日期 2026-10-04），提交第一个 commit'),
+ T('测一次基线：洛谷 P1001（A+B Problem），跑通编译、提交、AC 全流程')
+];
+
+var STLCK=[
+ T('set：insert / erase / count / find，lower_bound 与 upper_bound 的含义与返回值，迭代器遍历，与 vector 的选择依据'),
+ T('map：operator[] 与 insert 的区别、first / second 遍历；坑：m[k] 查询会在 k 不存在时自动插入默认值'),
+ T('priority_queue：默认大根堆；小根堆 greater 写法；自定义比较器（struct 重载 operator()）'),
+ T('multiset 专属坑：erase(x) 删除所有等于 x 的元素，删一个要用 erase(find(x))'),
+ T('哈希 vs 红黑树：unordered 平均 O(1) 但最坏 O(n) 可被卡常；需要有序遍历或 lower_bound 必须用 set / map'),
+ T('竞赛读写：ios::sync_with_stdio(false); cin.tie(0); 的作用与限制（混用 scanf 时不可用）')
+];
+
+/* ============ 寒假 + 开学冲刺（2027.01.25 – 03.19，个人冲刺 · 目标 03.20 校赛） ============ */
+var HW=[
+ {k:1,t:'基础算法补全 I：二分 + 前缀和与差分',items:[
+  K('手写二分模板：左 / 右边界两版，默写通过'),
+  P('P2440','木材加工（二分答案 · 橙）'),
+  P('P1873','砍树（二分答案 · 黄）'),
+  K('前缀和与差分模板：一维 + 二维，默写通过'),
+  P('P2367','语文成绩（差分 · 橙）'),
+  P('P1719','最大加权矩形（二维前缀和 · 黄）')]},
+ {k:2,t:'基础算法补全 II：双指针 + 贪心 + 位运算',items:[
+  K('双指针 / 滑动窗口模板'),
+  P('P1102','A-B 数对（双指针 / 二分 · 黄）'),
+  P('P1638','逛画展（滑动窗口 · 绿）'),
+  K('贪心：排序贪心 + 交换论证'),
+  P('P1208','混合牛奶（贪心 · 橙）'),
+  P('P5019','铺设道路（贪心 · 黄）'),
+  K('位运算：快速幂 / 异或性质'),
+  P('P1226','【模板】快速幂（黄）')]},
+ {k:3,t:'套题冲刺 I：真题 + 升频虚拟赛',items:[
+  K('往年校赛 / 蓝桥杯真题 2–3 题（洛谷真题专题自选）'),
+  K('CF 虚拟赛维持两天一场，赛时目标 A-D'),
+  K('思维题升档：黄 → 绿'),
+  K('统计 W1–W2 错题分布，确定 W4 回炉专题')]},
+ {k:4,t:'套题冲刺 II：弱项回炉（按错题分布定专题）',items:[
+  K('回炉专题（预计 DP）：模板 + 6–8 题独立 AC'),
+  K('错题本全部重做到独立 AC'),
+  K('虚拟赛继续：两天一场，补题到 D')]},
+ {k:5,t:'全真模拟周 + 模板默写',items:[
+  M('全真模拟 1（5h，往年校赛 / 区域赛真题，严格计时）'),
+  K('模拟后当天补题'),
+  K('高频模板默写：二分 / 并查集 / Dijkstra / 线段树'),
+  K('确认校赛确切日期与考核形式（问教练 / 学长）；02.27 周六全真模拟 2')]}
+];
+var HWDAILY=[
+ {h:'09:00–12:00',s:'当周主题：模板学习 + 练手题 3–4 道',t:'B'},
+ {h:'14:30–17:00',s:'周二 / 四 / 六：CF Div.3/4 虚拟赛（2h 赛制）· 周一 / 三 / 五：补题到 D（E 尽力）+ 加练',t:'B'},
+ {h:'20:00–21:00',s:'洛谷思维题 1 道（黄题起步）+ 错题整理',t:'A'}
+];
+var CJDAILY=[
+ {h:'09:00–12:00',s:'套题 / 校赛真题训练 2–3 题',t:'B'},
+ {h:'14:30–17:00',s:'周二 / 四 / 六：CF Div.3/4 虚拟赛 · 周一 / 三 / 五：补题到 D（E 尽力）',t:'B'},
+ {h:'20:00–21:00',s:'思维题 1 道（绿档）+ 错题整理',t:'A'}
+];
+var CJ=[
+ {k:1,t:'虚拟赛升频 + 真题',items:[
+  K('CF 虚拟赛升至每周 3 场，赛时目标稳定 A-D'),
+  K('往年校赛 / 蓝桥杯真题 2–3 题'),
+  K('确认校赛确切日期与考核形式'),
+  K('工程线暂停至考核结束，全部时间押校赛')]},
+ {k:2,t:'弱项回炉',items:[
+  K('按寒假错题分布定回炉专题：模板 + 6–8 题'),
+  K('错题本全部重做到独立 AC'),
+  K('每晚 1 道绿档思维题保持手感')]},
+ {k:3,t:'全真模拟 + 考前调整',items:[
+  M('全真模拟（5h，往年校赛题组卷）'),
+  K('模拟后当天补题'),
+  K('高频模板最后默写一遍'),
+  K('考前轻量：错题浏览、早睡，不熬夜')]}
+];
+/* ============ 大二下 + 暑期工程线（2027.03.01 – 08.31，月 → 周 → 日） ============ */
+var EWEEKS=[
+{n:1,m:'3 月',tp:'Linux 系统编程（压缩版：第 3–8 章）',d:[
+ [T('游双第 1–2 章速读 + WSL 检查：gcc / gdb / make / cmake 就位')],
+ [T('第 3 章：文件 I/O'),K('小程序①：文件复制 + 目录遍历')],
+ [T('第 4–5 章：进程与线程'),K('小程序②：fork 子进程 + 多线程计数器（加锁对拍）')],
+ [T('第 6 章：信号'),K('小程序③：SIGINT 优雅退出')],
+ [T('第 7–8 章：管道 / 共享内存 / 信号量'),K('小程序④：父子进程共享内存通信')],
+ [M('CF 一场'),K('工程 3h：小程序整理进 acm-2026 仓库；第 9–10 章（epoll 概览 / 服务器框架）自行阅读')]
+]},
+{n:2,m:'3 月',tp:'WebServer Phase 1（一）：线程池',d:[
+ [T('线程池设计：任务队列 / 工作线程 / 同步原语选型')],
+ [K('实现线程池 v1（固定线程数 + 任务队列）')],
+ [K('线程池 v2：优雅关闭（析构时唤醒全部线程）')],
+ [K('压力自测：提交 1 万任务验证无丢失')],
+ [K('gdb 实战：故意造一个死锁，再调出来解掉')],
+ [M('CF 一场'),K('工程 3h：HTTP 报文格式研读（请求行 / 头部 / GET 方法）')]
+]},
+{n:3,m:'4 月',tp:'WebServer Phase 1（二）：HTTP 解析与响应',d:[
+ [K('HTTP 请求解析器 v1：请求行 + 头部（状态机思路）')],
+ [K('解析器 v2：缓冲区设计，处理粘包与不完整报文')],
+ [K('静态资源路由：URL → 文件路径（防目录穿越）')],
+ [K('响应构建：状态行 + Content-Type + sendfile 发送文件')],
+ [K('里程碑：curl 成功取回 index.html（Phase 1 完成）')],
+ [M('CF 一场'),K('工程 3h：Phase 1 收尾，commit + README 更新架构图')]
+]},
+{n:4,m:'4 月',tp:'WebServer Phase 2（一）：epoll 与 Reactor',d:[
+ [T('五种 IO 模型 + select / poll / epoll 对比（面试必考，画图讲清）')],
+ [K('epoll 三接口小程序：验证 LT 与 ET 差异')],
+ [T('Reactor 模式（muduo 主从 reactor 模型）')],
+ [K('WebServer 接入 epoll：事件循环骨架')],
+ [K('非阻塞读 + EPOLLOUT 写事件处理')],
+ [M('CF 一场'),K('工程 3h')]
+]},
+{n:5,m:'4 月',tp:'WebServer Phase 2（二）：连接管理 + 蓝桥杯备赛',d:[
+ [K('主从 Reactor：主线程 accept，子线程 IO')],
+ [K('Connection 类封装：连接生命周期管理')],
+ [K('LT → ET 迁移 + 功能回归测试')],
+ [K('蓝桥杯备赛①：近两年省赛真题（一）')],
+ [K('蓝桥杯备赛②：真题（二）+ 错题整理')],
+ [M('蓝桥杯全真模拟（4h，往年题组卷）'),K('工程缓冲')]
+]},
+{n:6,m:'4 月',tp:'蓝桥杯省赛周（比赛日以当年通知为准）',d:[
+ [K('蓝桥杯真题③ + 高频考点默写（DP / 搜索 / 简单数论）')],
+ [K('考前轻量：错题浏览，早睡')],
+ [M('蓝桥杯省赛 · 目标省一'),K('赛后对答案估分')],
+ [K('省赛复盘：每道丢分题写三行分析')],
+ [K('工程恢复：定时器设计（小根堆）调研')],
+ [M('CF 一场'),K('工程 3h：定时器 v1')]
+]},
+{n:7,m:'5 月',tp:'WebServer Phase 2（三）：定时器 + 异步日志 + 压测',d:[
+ [K('定时器 v2：小根堆 + 惰性删除')],
+ [K('非活跃连接超时断开（与 epoll 联动）')],
+ [T('异步日志：双缓冲技术（muduo 日志设计）')],
+ [K('异步日志实现 + 验证高并发下不丢不阻塞')],
+ [K('webbench 压测：记录 QPS 基线数据')],
+ [M('CF 一场'),K('工程 3h：压测调优，对比数据写进 README')]
+]},
+{n:8,m:'5 月',tp:'WebServer Phase 3（一）：数据库连接池',d:[
+ [T('MySQL 基础：SQL / 索引 / 事务（连接池前置知识）')],
+ [K('Connector/C++ 跑通最小示例')],
+ [K('连接池实现（RAII 获取与归还）')],
+ [K('接入 WebServer：GET 查询数据库返回演示页')],
+ [K('边界测试：并发获取 / 超时 / 归还')],
+ [M('CF 一场'),K('工程 3h')]
+]},
+{n:9,m:'5 月',tp:'WebServer Phase 3（二）：测试与重构',d:[
+ [K('gtest：线程池 + 解析器补测试用例')],
+ [K('重构：命名 / 头文件依赖 / clang-format 全量过一遍')],
+ [K('解决 README「已知问题」清单第一条')],
+ [K('AddressSanitizer 全量跑：修掉所有内存问题')],
+ [K('压测回归：确认无性能回退')],
+ [M('CF 一场'),K('工程 3h')]
+]},
+{n:10,m:'5 月',tp:'内存池 + 双项目收尾 + 技术博客（压缩版）',d:[
+ [T('内存池调研：定长池 / 伙伴系统 / slab 思想'),K('MemoryPool v1：定长池 + 自由链表')],
+ [K('多线程版本：线程局部缓存 + benchmark 对比 malloc')],
+ [K('gtest + AddressSanitizer 抽查：线程池 / 解析器 / 内存池')],
+ [K('WebServer 接入内存池，性能对比写进 README')],
+ [K('技术博客①②：《从零写 WebServer》架构篇 + epoll / 压测数据（掘金 / CSDN 发布）')],
+ [M('CF 一场'),K('阶段验收：两个项目完整可复现，README 定稿（架构图 + 压测表 + 已知问题）')]
+]},
+{n:11,m:'6 月',tp:'期末缓冲周（绩点优先）',d:[
+ [K('期末复习（绩点优先于一切）'),W('错题本 1 道重做（30 分钟内）')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('轻量：错题重做 + 休息')]
+]},
+{n:12,m:'6 月',tp:'期末考试周（一）',d:[
+ [K('期末复习（绩点优先于一切）'),W('错题本 1 道重做（30 分钟内，可选）')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('轻量：错题重做 + 休息')]
+]},
+{n:13,m:'6 月',tp:'期末考试周（二）',d:[
+ [K('期末复习（绩点优先于一切）'),W('错题本 1 道重做（30 分钟内，可选）')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('期末复习'),W('算法 1 题维持')],
+ [K('轻量：错题重做 + 休息')]
+]},
+{n:14,m:'6 月',tp:'简历 v1 + 学期总结',d:[
+ [K('期末结束：简历 v1 初稿（教育 / 技能 / 项目 / 竞赛四栏）')],
+ [K('项目描述打磨：每个项目三条「难点 + 解决」')],
+ [K('简历发 Buddy 与学长 review 一轮')],
+ [K('修订 v2')],
+ [K('博客数据回填 README')],
+ [M('CF 一场'),K('学期总结复盘：找 Buddy')]
+]},
+{n:15,m:'6–7 月',tp:'投递启动',d:[
+ [K('简历定稿 v3')],
+ [K('目标公司清单：C++ 后端 / 基础软件 15 家')],
+ [K('投第一批 3–5 家日常实习')],
+ [K('面试准备①：OS / 计网 / 项目八股')],
+ [K('面试准备②：10 分钟项目讲解版')],
+ [M('CF 一场'),K('机动')]
+]},
+{n:16,m:'7 月',tp:'面试准备周',d:[
+ [K('八股①：操作系统高频 30 题（上）')],
+ [K('八股②：操作系统（下）+ 手写题（LRU 等）')],
+ [K('八股③：计算机网络 TCP / HTTP 全套')],
+ [K('模拟面试：录音讲 10 分钟项目')],
+ [K('查漏：简历上每个词都能讲 3 分钟')],
+ [M('CF 一场'),K('机动')]
+]},
+{n:17,m:'7 月',tp:'面试实战周',d:[
+ [K('跟进投递 / 补投')],
+ [K('有面试则面后当天写复盘（被问倒的逐条记）')],
+ [K('补面试暴露的短板（一）')],
+ [K('补短板（二）')],
+ [K('补短板（三）')],
+ [M('CF 一场'),K('机动')]
+]},
+{n:18,m:'7 月',tp:'AI 启动：Python（一）',d:[
+ [T('廖雪峰 Python 教程：基础篇 1/3')],
+ [K('列表 / 字典 / 切片 / 推导式（与 C++ 对比笔记）')],
+ [K('函数 / 模块 / 文件 IO')],
+ [K('用 Python 重做 3 道已 AC 洛谷题')],
+ [K('再重做 3 题（目标 20 分钟一题）')],
+ [M('CF 一场'),K('机动')]
+]},
+{n:19,m:'7 月',tp:'AI 启动：Python（二）',d:[
+ [K('面向对象 + 常用标准库')],
+ [K('生成器 / 装饰器（读得懂即可）')],
+ [K('验收：20 分钟 Python 写出 LeetCode 中等题')],
+ [K('环境：pip / conda + numpy 入门')],
+ [K('numpy 向量化思维 10 练')],
+ [M('CF 一场'),K('机动')]
+]},
+{n:20,m:'8 月',tp:'机器学习（一）：李宏毅 ML + 手推',d:[
+ [T('李宏毅 ML 第 1–2 讲（回归 / 损失函数）')],
+ [K('手推线性回归梯度下降（纸 + 代码各一遍）')],
+ [T('李宏毅 第 3–4 讲（分类 / 逻辑回归）')],
+ [K('numpy 实现逻辑回归')],
+ [K('注册 Kaggle + Titanic 数据初探')],
+ [M('CF 一场'),K('机动')]
+]},
+{n:21,m:'8 月',tp:'机器学习（二）：Kaggle Titanic',d:[
+ [K('Titanic：数据清洗 + 特征工程')],
+ [K('Titanic：sklearn 训练第一个分类器')],
+ [K('Titanic：提交 + 读懂评估指标')],
+ [T('李宏毅：过拟合 / 正则化 / 验证集')],
+ [K('Titanic 迭代一轮特征')],
+ [M('CF 一场'),K('机动')]
+]},
+{n:22,m:'8 月',tp:'机器学习（三）：CNN 与自注意力入门',d:[
+ [T('李宏毅：CNN 入门')],
+ [K('手算一遍卷积输出尺寸')],
+ [T('李宏毅：自注意力机制引入')],
+ [K('练习：向别人讲清过拟合与正则化')],
+ [K('阶段 C 验收自查：梯度下降 / 分类器 / 指标')],
+ [M('CF 一场'),K('机动')]
+]},
+{n:23,m:'8 月',tp:'暑期收尾 + 开学准备',d:[
+ [K('暑期所有面试问题过一遍（复盘清单）')],
+ [K('ICPC 组队确认：队友暑假状态同步')],
+ [K('新学期目标设定（找 Buddy 过一遍）')],
+ [K('项目 README 最后梳理')],
+ [K('休息 / 机动')],
+ [M('CF 一场'),K('开学前总结周报')]
+]}
+];
+
+/* ============ 远期（2027.09 – 2028.12）：周主题自动生成日计划 ============ */
+var THEMES=[
+ {f:'2027-09-01',t:'2027-09-30',tp:'ICPC 网络赛冲刺月',d:[W('组队真题训练 1–2 题'),K('备赛：模板库整理 + 补短板')],sat:[M('组队模拟赛（5h 赛制）')]},
+ {f:'2027-10-01',t:'2027-12-20',tp:'ICPC 区域赛赛季 + 深度学习阶段 D',d:[W('组队训练 1 题'),K('d2l 当周章节（代码亲手跑）')],sat:[M('CF / 组队模拟赛')]},
+ {f:'2027-12-21',t:'2028-01-24',tp:'期末优先（绩点第一）',d:[K('期末复习'),W('算法 1 题维持')],sat:[K('错题重做 + 轻量复习')]},
+ {f:'2028-01-25',t:'2028-02-29',tp:'寒假：深度学习全速 + ICPC 二战备赛',d:[K('d2l 推进（每日 2h 以上）'),W('算法 1 题')],sat:[M('组队模拟赛')]},
+ {f:'2028-03-01',t:'2028-05-31',tp:'AI 阶段 E：大模型本体（Karpathy / HF Course）',d:[K('阶段 E 课程推进（跟敲代码）'),W('算法 1 题')],sat:[K('项目实践 / 机动')]},
+ {f:'2028-06-01',t:'2028-07-15',tp:'AI 阶段 F：C++ × 大模型（llama.cpp / CUDA）',d:[K('阶段 F 源码阅读与实践'),W('算法 1 题')],sat:[K('源码实践 / 机动')]},
+ {f:'2028-07-16',t:'2028-08-31',tp:'暑期实习（工作 + 每日一记）',d:[K('实习工作'),K('每日一记：学到什么 / 可写进简历什么')]},
+ {f:'2028-09-01',t:'2028-11-30',tp:'秋招：投递 + 面试 + 复盘',d:[K('秋招投递 / 面试准备'),K('面后复盘（当天写）')]},
+ {f:'2028-12-01',t:'2028-12-31',tp:'收尾：毕业设计 + 年度总结',d:[K('毕业设计推进'),K('年度总结与下一年规划')]}
+];
+
+var MONTHS=[
+ {m:'3–4 月',eng:'Linux 系统编程：游双第 3–10 章（文件 I/O、进程、线程、信号、IPC），每个主题写一个小程序验证；WebServer 骨架 + 线程池 + HTTP 解析',maint:'每日 1 题（30 分钟不 AC 即看题解标记复习）+ CF 每周 1 场',out:'5 个系统调用小程序；curl 取回静态页'},
+ {m:'4–5 月',eng:'WebServer Phase 2：epoll Reactor + 连接管理 + 定时器 + 异步日志 + webbench 压测；蓝桥杯省赛备赛（比赛日以当年通知为准）',maint:'CF 每周 1 场',out:'压测 QPS 1 万+ / 省一证书'},
+ {m:'5 月',eng:'Phase 3：数据库连接池 + 单元测试 + 内存池 + 技术博客发布',maint:'CF 每周 1 场',out:'完整可复现项目 ×2 + 博客'},
+ {m:'6 月',eng:'期末 + 简历 v1 + 学期总结',maint:'维持',out:'简历 v1 + 博客链接'},
+ {m:'7–8 月',eng:'投递日常实习 + 面试实战 + AI 启动（Python → 李宏毅 ML → Kaggle Titanic）',maint:'每日 1 题',out:'1–2 次面试经历 + Titanic 提交'}
+];
+var ENGCK=[
+ T('Git：main + feature 分支开发；commit 用英文祈使句（Add epoll event loop）；一个功能一个 commit'),
+ T('README 必含：架构图、编译方式（CMake）、压测数据表、已知问题清单——面试官 90% 只看 README 和前 3 个目录'),
+ T('CMake 管理构建；代码过一遍 clang-format 统一风格'),
+ T('每周工程学习 ≥5 小时：周六下午 3 小时为主 + 平时碎片')
+];
+
+var RES_A=[
+ {n:'《线性代数的本质》',d:'3Blue1Brown，B 站官方中文版，约 4 小时',dm:'bilibili'},
+ {n:'《微积分的本质》',d:'同上系列；导数与链式法则是反向传播的全部数学基础',dm:'bilibili'},
+ {n:'学校概率论课',d:'认真上课即可——大模型训练本质是最优化与采样',dm:'课内'}
+];
+var RES_B=[
+ {n:'廖雪峰 Python 教程',d:'中文、免费、体系完整，读完基础篇即可',dm:'liaoxuefeng.com'},
+ {n:'Python 官方教程（中文）',d:'备选，权威',dm:'docs.python.org'},
+ {n:'实践作业',d:'把已 AC 的 30 道洛谷题用 Python 重写：缩进语法、列表切片、列表推导式、dict/set 差异',dm:'洛谷'}
+];
+var RES_C=[
+ {n:'李宏毅《机器学习》',d:'台大中文课程，B 站搜最新年份；覆盖回归、CNN、自注意力、Transformer，全网最适合中文入门',dm:'bilibili'},
+ {n:'吴恩达 ML Specialization',d:'备选主课，Coursera 可申请助学金免费',dm:'coursera.org'},
+ {n:'实践：Kaggle Titanic',d:'完整跑一遍数据清洗→特征→训练→提交，追「跑通」不追名次',dm:'kaggle.com'}
+];
+var RES_D=[
+ {n:'《动手学深度学习》d2l.ai',d:'李沐，中文在线免费 + B 站视频。顺序：预备知识→线性网络→MLP→DL 计算→卷积→注意力→优化算法。每节代码必须亲手跑',dm:'zh.d2l.ai'},
+ {n:'3Blue1Brown 神经网络系列',d:'4 集，建立矩阵运算变成「识别」的直觉',dm:'bilibili'},
+ {n:'PyTorch 官方 60 分钟教程',d:'中文，跑通 tensor、autograd、nn.Module',dm:'pytorch.org'},
+ {n:'实践项目',d:'MNIST 与 CIFAR-10 分类：不用高层封装，手写完整训练循环',dm:'本地/Colab'}
+];
+var RES_E=[
+ {n:'Karpathy「Zero to Hero」',d:'YouTube 全免费（B 站有中字）。micrograd → makemore → Let\u2019s build GPT（跟敲）→ Tokenizer → llm.c',dm:'YouTube'},
+ {n:'Hugging Face NLP Course',d:'官方免费：Transformer 架构、分词器、transformers 库、微调，配免费算力',dm:'huggingface.co'},
+ {n:'斯坦福 CS224n',d:'NLP 标准课程，YouTube 公开全套讲座',dm:'YouTube'},
+ {n:'论文精读路线',d:'配 B 站李沐精读：Attention Is All You Need → GPT-2 → GPT-3 → InstructGPT → LLaMA，每篇是上一篇的增量',dm:'bilibili'}
+];
+var RES_F=[
+ {n:'llama.cpp',d:'纯 C++ 推理引擎：读 ggml 张量库、量化（Q4/Q8）、KV cache；实践：编译跑通本地模型，优化一个小环节',dm:'github'},
+ {n:'llm.c',d:'Karpathy 的 C/CUDA 实现 GPT-2 训练——你的 C++ 背景读起来最亲切',dm:'github'},
+ {n:'vLLM',d:'生产级推理引擎：PagedAttention 论文 + 源码（Python 壳，核心在底层）',dm:'github'},
+ {n:'CUDA',d:'NVIDIA DLI 免费课程 + 编程指南：SIMT → 内存层次 → 归约 → 矩阵乘法优化',dm:'nvidia.com'}
+];
+
+var STAGES=[
+ {id:'s1',nm:'竞赛 C++',tm:'2026.10 – 2027.01',main:'竞赛 C++：16 周吃透 STL → 搜索 → 图论 → DP → 数据结构，每周模拟赛',floor:'工程线每周 3–5 h（环境 + Git）',mile:'学期 130–170 题（含模拟赛与 CF）；全部主线知识点过完'},
+ {id:'s2',nm:'个人冲刺',tm:'2027.01 – 03（冲刺校赛）',main:'基础算法补全（二分 / 前缀和差分 / 双指针 / 贪心 / 位运算）+ 每日洛谷思维题 + CF Div.3/4 两天一场 + 全真模拟；目标 2027.03.20 校赛进集训队',floor:'每天 1 题手感 + 错题清零',mile:'寒假+冲刺新增 ≥150 题；CF 赛时稳定 A-D；校赛冲击集训队达标'},
+ {id:'s3',nm:'工程 C++',tm:'2027.03 – 06',main:'工程 C++：Linux 系统编程 → WebServer 项目',floor:'算法每天 1 题 + CF 每周 1 场 + 蓝桥杯省一（4 月）',mile:'WebServer 压测 QPS 1 万+；简历 v1'},
+ {id:'s4',nm:'实习 AI',tm:'2027.07 – 08',main:'项目收尾 + 投日常实习 + AI 启动（Python → 李宏毅 ML）',floor:'每日 1 题算法',mile:'完成 Kaggle Titanic；获得 1–2 次面试经历'},
+ {id:'s5',nm:'ICPC + DL',tm:'2027.09 – 2028.02',main:'ICPC 网络赛 + 区域赛首战（目标银 / 铜，不硬性追金）；深度学习（d2l.ai）',floor:'工程与实习面试持续',mile:'区域赛银铜可期；d2l 全部代码跑通'},
+ {id:'s6',nm:'AI 深化',tm:'2028.03 – 12',main:'AI 工程深化（Karpathy / llama.cpp / CUDA）+ 暑期实习 + 秋招',floor:'ICPC 第二战',mile:'暑期实习 offer；秋招：推理引擎 / AI Infra / C++ 后端'}
+];
+var SR={s1:['2026-10-04','2027-01-24'],s2:['2027-01-25','2027-03-19'],s3:['2027-03-22','2027-06-30'],s4:['2027-07-01','2027-08-31'],s5:['2027-09-01','2028-02-29'],s6:['2028-03-01','2028-12-31']};
+
+var TIERS=[
+ {nm:'青铜',ch:'铜',n:10},{nm:'白银',ch:'银',n:50},{nm:'黄金',ch:'金',n:100},{nm:'铂金',ch:'铂',n:200},{nm:'钻石',ch:'钻',n:300},{nm:'星耀',ch:'耀',n:400}
+];
+
+/* ============ 日期工具与全周期日计划生成 ============ */
+function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+var TODAY=fmt(new Date());
+var WD=['周日','周一','周二','周三','周四','周五','周六'];
+function dwOf(dt){return WD[new Date(dt+'T00:00:00').getDay()]}
+function isSun(dt){return dwOf(dt)==='周日'}
+function addDays(dt,n){var d=new Date(dt+'T00:00:00');d.setDate(d.getDate()+n);return fmt(d)}
+function eachDate(a,b,fn){var d=new Date(a+'T00:00:00'),e=new Date(b+'T00:00:00');while(d<=e){fn(fmt(d));d.setDate(d.getDate()+1)}}
+function weekRange(dt){var d=new Date(dt+'T00:00:00');var off=(d.getDay()+6)%7;d.setDate(d.getDate()-off);var mon=fmt(d);d.setDate(d.getDate()+6);return[mon,fmt(d)]}
+function d5(s){return s.slice(5).replace('-','.')}
+
+var REV=[K('白天自由：补题 / 休息 / 生活（不计考核）'),K('本周错题挑 1 道重做（可选）'),K('20:00 复盘五问（自动提醒已设）'),K('点下方「生成周报」发给 Buddy')];
+var EXBUF=[K('期末复习（绩点优先于一切）'),W('错题本 1 道重做（30 分钟内，可选）')];
+var BUF=[K('当日缓冲：推进本周主题或补欠账'),W('算法 1 题维持（底线）')];
+
+var DAYMAP={};
+function put(dt,items,label){if(!DAYMAP[dt])DAYMAP[dt]={items:[],lb:''};if(label)DAYMAP[dt].lb=label;DAYMAP[dt].items=DAYMAP[dt].items.concat(items)}
+
+put('2026-10-04',W0,'W0 启动日 · 五件事，90 分钟内完成');
+WEEKS.forEach(function(w){w.days.forEach(function(d){put(d.dt,d.items,'第 '+w.n+' 周 · '+w.topic)})});
+eachDate('2026-10-05','2027-01-10',function(dt){if(!DAYMAP[dt]&&!isSun(dt))put(dt,EXBUF,'期末缓冲')});
+eachDate('2027-01-11','2027-01-24',function(dt){if(!isSun(dt))put(dt,EXBUF,'期末考试周')});
+(function(){for(var k=1;k<=5;k++){var st='2027-01-25';var start=addDays(st,(k-1)*7);
+ eachDate(start,addDays(start,6),function(dt){if(isSun(dt))return;var its=HWDAILY.map(function(x){return{t:x.t,s:x.h+' '+x.s}});
+  if(dt===start)its=HW[k-1].items.concat(its);
+  put(dt,its,'寒假 W'+k+' · '+HW[k-1].t)})}})();
+(function(){for(var k=1;k<=3;k++){var st='2027-03-01';var start=addDays(st,(k-1)*7);
+ eachDate(start,addDays(start,6),function(dt){if(isSun(dt))return;var its=CJDAILY.map(function(x){return{t:x.t,s:x.h+' '+x.s}});
+  if(dt==='2027-03-20')its=[M('校赛 · 集训队考核（暂定 03.20，以实际通知为准）')];
+  else if(dt===start)its=CJ[k-1].items.concat(its);
+  put(dt,its,'开学冲刺 W'+k+' · '+CJ[k-1].t)})}})();
+(function(){var base='2027-03-22';
+ EWEEKS.forEach(function(ew){var start=addDays(base,(ew.n-1)*7);
+  for(var i=0;i<6;i++){var dt=addDays(start,i);var its=ew.d[i]||BUF;put(dt,its,'工程 W'+ew.n+' · '+ew.tp)}})
+ eachDate('2027-08-30','2027-08-31',function(dt){if(!isSun(dt))put(dt,[K('开学准备：组队状态同步 / 项目收尾'),W('算法 1 题')],'缓冲 · 开学准备')});
+})();
+THEMES.forEach(function(th){eachDate(th.f,th.t,function(dt){if(isSun(dt))return;var sat=dwOf(dt)==='周六';var its=sat?(th.sat||th.d):th.d;put(dt,its,th.tp)})});
+eachDate('2026-10-04','2028-12-31',function(dt){if(isSun(dt)&&!DAYMAP[dt])put(dt,REV,'复盘日')});
+
+var ALLITEMS=[];
+Object.keys(DAYMAP).sort().forEach(function(dt){DAYMAP[dt].items.forEach(function(it,i){ALLITEMS.push({id:'d'+dt+'-'+i,it:it,dt:dt,pr:it.t==='B'||it.t==='C'})})});
+function itemsInRange(a,b){var out=[];ALLITEMS.forEach(function(x){if(x.dt>=a&&x.dt<=b)out.push(x)});return out}
+function probDone(){var n=S.extra||0;ALLITEMS.forEach(function(x){if(x.pr&&done(x.id))n++});return n}
+
+/* ============ 渲染 ============ */
+function tgHtml(t){var m={A:'学',B:'题',C:'赛',D:'任',E:'选'};return '<em class="tg tg-'+t+'">'+(m[t]||'任')+'</em>'}
+function itemHTML(id,it){
+ var pid=it.p?'<a class="pid" href="https://www.luogu.com.cn/problem/'+it.p+'" target="_blank" rel="noopener">'+it.p+'</a> ':'';
+ return '<div class="item'+isDone(id)+'" data-id="'+id+'"><span class="cb"></span><span class="tx">'+tgHtml(it.t)+pid+it.s+'</span></div>';
+}
+function resHTML(id,r){
+ return '<div class="item res'+isDone(id)+'" data-id="'+id+'"><span class="cb"></span><span class="tx">'+tgHtml('A')+'<b>'+r.n+'</b>：'+r.d+'<span class="dim">'+r.dm+'</span></span></div>';
+}
+function cntOf(el){var i=el.querySelectorAll('.item'),d=el.querySelectorAll('.item.done');return d.length+'/'+i.length}
+function dayHTML(dt,items){
+ var h='<section class="day'+(dt===TODAY?' today':'')+'"><div class="dh"><span><b>'+dwOf(dt)+'</b> · '+d5(dt)+'</span><span class="cnt"></span></div>';
+ items.forEach(function(it,i){h+=itemHTML('d'+dt+'-'+i,it)});
+ return h+'</section>';
+}
+function weekStat(mon,until){
+ var its=itemsInRange(mon,until);
+ var dn=0,pd=0,pdd=0;
+ its.forEach(function(x){if(done(x.id))dn++;if(x.pr){pd++;if(done(x.id))pdd++}});
+ return{dn:dn,tot:its.length,pdn:pdd,pd:pd}
+}
+function curStage(){if(TODAY<'2027-01-25')return STAGES[0];if(TODAY<'2027-03-22')return STAGES[1];if(TODAY<'2027-07-01')return STAGES[2];if(TODAY<'2027-09-01')return STAGES[3];if(TODAY<'2028-03-01')return STAGES[4];return STAGES[5]}
+
+function tierOf(n){var cur=TIERS[0];TIERS.forEach(function(t){if(n>=t.n)cur=t});return cur}
+function tierHTML(){
+ var n=probDone(),cur=tierOf(n);
+ var h='<div class="tiers">';
+ TIERS.forEach(function(t){h+='<div class="tier'+(n>=t.n?' hit':'')+'"><div class="ring '+(t.nm==='青铜'?'r-brz':t.nm==='白银'?'r-slv':t.nm==='黄金'?'r-gld':t.nm==='铂金'?'r-pla':t.nm==='钻石'?'r-dia':'r-sta')+'">'+t.ch+'</div><div class="nm">'+t.nm+' '+t.n+'</div></div>'});
+ h+='</div>';
+ var nxt=TIERS[TIERS.indexOf(cur)+1];
+ h+='<div class="bigTier"><div class="bn">'+cur.nm+' · '+n+' 题'+(n?'（含课外 '+S.extra+'）':'')+'</div><div class="bs">'+(nxt?('距 '+nxt.nm+' 还差 '+(nxt.n-n)+' 题——把今天的底线题做掉，就近一步'):'已是最高段位，去打区域赛')+'</div></div>';
+ return h;
+}
+function updateHeader(){var n=probDone();document.getElementById('hTier').textContent=tierOf(n).nm+' · '+n+' 题'}
+function toast(s){var t=document.getElementById('toast');t.textContent=s;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(function(){t.classList.remove('show')},2200)}
+function expProg(){try{var data=localStorage.getItem(LS)||'{}';var blob=new Blob([data],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='xb-plan-progress-'+TODAY+'.json';document.body.appendChild(a);a.click();a.remove();toast('已导出进度备份')}catch(e){toast('导出失败')}}
+function impProg(){var inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';inp.onchange=function(){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var o=JSON.parse(r.result);if(o&&typeof o==='object'){S.items=o.items||{};S.extra=o.extra||0;save();document.querySelectorAll('.item').forEach(function(el){el.classList.toggle('done',!!S.items[el.dataset.id])});toast('进度导入成功，已刷新')}else{toast('文件格式不正确')}}catch(e){toast('导入失败：不是有效备份文件')}};r.readAsText(f)};inp.click()}
+
+function heroHTML(){
+ var d=new Date();
+ var wd='日一二三四五六'[d.getDay()];
+ var day=DAYMAP[TODAY];
+ var wtxt=day&&day.lb?day.lb:curStage().nm+' · '+curStage().tm;
+ var dn=0;ALLITEMS.forEach(function(x){if(done(x.id))dn++});
+ var pct=ALLITEMS.length?Math.round(dn/ALLITEMS.length*100):0;
+ var r=weekRange(TODAY),ws=weekStat(r[0],TODAY);
+ return '<div class="hero"><div class="dt">'+(d.getMonth()+1)+' 月 '+d.getDate()+' 日 · 周'+wd+'</div><div class="wk">'+wtxt+'</div>'
+ +'<div class="pwrap"><div class="plabel"><span>两年计划总进度</span><span>'+pct+'%</span></div><div class="pbar"><i style="width:'+pct+'%"></i></div>'
+ +'<div class="plabel" style="margin-top:4px"><span>本周已完成 '+ws.dn+' / '+ws.tot+' 项</span><span>累计 '+dn+' / '+ALLITEMS.length+'</span></div></div></div>';
+}
+
+function reviewCard(){
+ var r=weekRange(TODAY),ws=weekStat(r[0],TODAY);
+ var day=DAYMAP[TODAY];
+ var h='<div class="card" data-scope><div class="hd"><b>复盘日 · 本周收官</b><span class="cnt">'+ws.dn+'/'+ws.tot+'</span></div>';
+ h+='<div class="rvstat">本周（'+d5(r[0])+' – 今天）：完成 <b>'+ws.dn+' / '+ws.tot+'</b> 项 · 刷题 <b>'+ws.pdd+' / '+ws.pd+'</b> 道</div>';
+ day.items.forEach(function(it,i){h+=itemHTML('d'+TODAY+'-'+i,it)});
+ h+='<div class="note">复盘五问：① 本周 AC 几道，对照底线？② 最难一题卡在哪一步？③ 主线推进了什么？④ 最大时间黑洞？⑤ 下周底线（≤ 本周实际 × 1.1）？20:00 有自动提醒，带答案来找我。</div></div>';
+ return h;
+}
+function dayCard(){
+ var day=DAYMAP[TODAY];
+ var h='<div class="card" data-scope><div class="hd"><b>今天要做的事</b><span class="cnt"></span></div>';
+ if(day.lb)h+='<div class="lb">'+day.lb+'</div>';
+ h+=dayHTML(TODAY,day.items);
+ if(TODAY==='2026-10-04')h+='<div class="note">这五项 90 分钟内可完成。完成后休息，10 月 5 日（周一）W1 正式开始，第一题 P1177。</div>';
+ h+='</div>';
+ return h;
+}
+
+function todayView(){
+ var h=heroHTML();
+ if(TODAY>'2028-12-31'){
+  h+='<div class="card"><div class="hd"><b>计划周期已完成</b></div><div class="empty">2026.10 – 2028.12 两年计划走完。<br>无论此刻在哪一段，能坚持打开这个 App 的你已经赢了大多数人。去找 Buddy 做总复盘，写下一个两年计划。</div></div>';
+ }else{
+  var day=DAYMAP[TODAY];
+  if(day&&day.lb==='复盘日')h+=reviewCard();
+  else if(day)h+=dayCard();
+  else h+='<div class="card"><div class="empty">今日无专项安排。底线规则：做 1 道自选题、错题三行、git commit。</div><div>'+itemHTML('x-'+TODAY,M('底线自选题 1 道（弄懂即算）'))+itemHTML('x-'+TODAY+'-2',K('错题三行笔记 + git commit'))+'</div></div>';
+ }
+ h+='<div class="card"><div class="hd"><b>段位 · 累计 AC</b><span class="cnt">'+probDone()+' 题</span></div>'+tierHTML()+'<div class="note">只和一个人比：上周的自己。CF / 课余刷的题用下方按钮计入。</div></div>';
+ h+='<div class="btnrow"><button class="btn ghost" data-act="extra">+1 课外题</button><button class="btn" data-act="report">生成周报</button></div>';
+ return h;
+}
+
+function stgHead(s,cur,rid){
+ var rg=SR[rid],its=itemsInRange(rg[0],rg[1]);
+ var dn=0;its.forEach(function(x){if(done(x.id))dn++});
+ var pct=its.length?Math.round(dn/its.length*100):0;
+ return '<div class="stg"><h2>'+s.nm+' ｜ '+s.tm+'</h2>'+(cur?'<div class="tm">当前所处阶段</div>':'')+'<div class="row"><b>主线</b>：'+s.main+'</div><div class="row"><b>保底</b>：'+s.floor+'</div><div class="row"><b>里程碑验收</b>：'+s.mile+'</div>'
+ +'<div class="pwrap2"><div class="plabel2"><span>本阶段进度</span><span>'+dn+' / '+its.length+' · '+pct+'%</span></div><div class="pbar"><i style="width:'+pct+'%"></i></div></div></div>';
+}
+
+function weekSection(w,open){
+ var h='<section class="week'+(open?' open':'')+'"><div class="wk-hd" data-wk><div class="r1"><span class="no">'+w.no+'</span><span class="sp">'+w.span+'</span><span class="cnt"></span></div><div class="tp"><b>'+w.topic+'</b><br>'+w.goal+'</div></div><div class="wk-body">';
+ w.days.forEach(function(d){h+=dayHTML(d.dt,d.items)});
+ return h+'</div><div class="rvrow">周日：复盘日——错题重做 + 20:00 五问 + 生成周报（在「今日」栏自动出现）</div></section>';
+}
+function wkCount(w){var tot=0,dd=0;w.days.forEach(function(d){d.items.forEach(function(it,i){tot++;if(done('d'+d.dt+'-'+i))dd++})});return dd+'/'+tot}
+
+function curW1Idx(){for(var i=0;i<WEEKS.length;i++){var w=WEEKS[i];for(var j=0;j<w.days.length;j++){if(w.days[j].dt===TODAY)return i+1}}var lo='2026-10-05',hi='2027-01-10';if(TODAY>=lo&&TODAY<=hi)return Math.min(14,Math.floor((new Date(TODAY)-new Date(lo))/6048e5)+1);return 0}
+
+function s1View(){
+ var h=stgHead(STAGES[0],TODAY<'2027-01-25','s1');
+ h+='<div class="card" data-scope><div class="hd"><b>STL 默写清单（考试式标准）</b><span class="cnt"></span></div>';
+ STLCK.forEach(function(it,i){h+=itemHTML('stl-'+i,it)});
+ h+='</div>';
+ var cw=curW1Idx();
+ WEEKS.forEach(function(w,i){var ww={no:'第 '+w.n+' 周',topic:w.topic,span:w.span,goal:w.goal,days:w.days};h+=weekSection(ww,cw===i+1)});
+ h+='<div class="card"><div class="hd"><b>期末考试周（01.11 – 01.24）</b></div><div class="empty">不做新题。每天从错题本挑 1 道重做（30 分钟内）保持手感。绩点优先于一切。</div></div>';
+ h+='<div class="card"><div class="note">调档机制：连续 4 周稳定超出理想线 → 周题量 +5（向更高强度靠拢）；执行吃力 → 底线减 2、模拟赛改双周。回退不算失败。原版 800–1200 题目标与课业物理冲突，本表学期 130–170 题（含模拟赛与 CF），CF 1600 合理达成时点大二下至大三上。</div></div>';
+ return h;
+}
+
+function s2View(){
+ var h=stgHead(STAGES[1],TODAY>='2027-01-25'&&TODAY<'2027-03-22','s2');
+ h+='<div class="card"><div class="hd"><b>每日结构（学六休一）</b></div>';
+ HWDAILY.forEach(function(x){h+='<div class="mrow"><div class="mm">'+x.h.slice(0,5)+'</div><div class="mc">'+x.s+'</div></div>'});
+ h+='</div>';
+ HW.forEach(function(hw){h+='<div class="card" data-scope><div class="hd"><b>寒假 W'+hw.k+' ｜ '+hw.t+'</b><span class="cnt"></span></div>';hw.items.forEach(function(it,i){h+=itemHTML('hw'+hw.k+'-'+i,it)});h+='</div>'});
+ h+='<div class="card"><div class="hd"><b>开学冲刺每日结构（03.01 – 03.19 · 工程线暂停）</b></div>';
+ CJDAILY.forEach(function(x){h+='<div class="mrow"><div class="mm">'+x.h.slice(0,5)+'</div><div class="mc">'+x.s+'</div></div>'});
+ h+='</div>';
+ CJ.forEach(function(hw){h+='<div class="card" data-scope><div class="hd"><b>冲刺 W'+hw.k+' ｜ '+hw.t+'</b><span class="cnt"></span></div>';hw.items.forEach(function(it,i){h+=itemHTML('cj'+hw.k+'-'+i,it)});h+='</div>'});
+ h+='<div class="card" data-scope><div class="hd"><b>比赛与验证目标</b><span class="cnt"></span></div>';
+ h+=itemHTML('hwt-1',T('CF Div.3/4 虚拟赛两天一场（周二 / 四 / 六下午）：严格 2h 赛制，赛后必须补到 D，E 尽力补，G 不强求'));
+ h+=itemHTML('hwt-2',T('洛谷思维题每天 1 道：黄题起步、冲刺期绿档；30–40 分钟无思路就看题解，看完关掉题解独立写完'));
+ h+=itemHTML('hwt-3',T('校赛（暂定 03.20）验收：寒假+冲刺新增 ≥150 题；赛时稳定 A-D（≥4 场）；五块基础算法模板默写 + 变形题 AC。三目标达二即达标'));
+ h+='</div>';
+ return h;
+}
+
+function s3View(){
+ var h=stgHead(STAGES[2],TODAY>='2027-03-22'&&TODAY<'2027-07-01','s3');
+ h+='<div class="card"><div class="hd"><b>工程线月历（2027.03 – 08）</b></div>';
+ MONTHS.forEach(function(mo,i){
+  h+='<div class="mrow"><div class="mm">'+mo.m+'</div><div class="mc"><div>'+itemHTML('mo-'+i+'-0',T(mo.eng))+'</div><div class="maintain">竞赛维持线：'+mo.maintain+'</div><div style="font-size:11.5px;color:#8B8478;margin-top:3px">产出：'+mo.out+'</div></div></div>';
+ });
+ h+='</div>';
+ var cur=0;EWEEKS.forEach(function(ew,i){var st=addDays('2027-03-22',(ew.n-1)*7);if(TODAY>=st&&TODAY<=addDays(st,6))cur=i+1});
+ EWEEKS.forEach(function(ew,i){
+  var st=addDays('2027-03-22',(ew.n-1)*7);
+  var days=[];for(var k=0;k<6;k++){var dt=addDays(st,k);days.push({dt:dt,items:ew.d[k]||BUF})}
+  var ww={no:ew.m+' · 工程 W'+ew.n,topic:ew.tp,span:d5(st)+' – '+d5(addDays(st,6)),goal:'工作日主线推进 + 每日 1 题维持 ｜ 周六 CF 一场',days:days};
+  h+=weekSection(ww,cur===i+1);
+ });
+ h+='<div class="card" data-scope><div class="hd"><b>工程规范（从第一天养成）</b><span class="cnt"></span></div>';
+ ENGCK.forEach(function(it,i){h+=itemHTML('eng-'+i,it)});
+ h+='</div>';
+ h+='<div class="card" data-scope><div class="hd"><b>AI 副线 · 阶段 A：数学地基（碎片时间，约 20h）</b><span class="cnt"></span></div>';
+ RES_A.forEach(function(r,i){h+=resHTML('ra-'+i,r)});
+ h+='<div class="note">验收：能向别人解释矩阵乘法的几何意义、特征值是什么。直观理解优先，不必会手算复杂题。</div></div>';
+ return h;
+}
+
+function s4View(){
+ var h=stgHead(STAGES[3],TODAY>='2027-07-01'&&TODAY<'2027-09-01','s4');
+ h+='<div class="card" data-scope><div class="hd"><b>7 月：项目收尾 + 投递</b><span class="cnt"></span></div>';
+ h+=itemHTML('jul-1',T('项目收尾：WebServer 完整可复现 + README 定稿'));
+ h+=itemHTML('jul-2',T('简历定稿：竞赛经历 + 刷题数据 + 项目难点（写清架构与压测数据）'));
+ h+=itemHTML('jul-3',T('投 3–5 家日常实习：目标是获得 1–2 次真实面试经验，暴露差距本身就是收获'));
+ h+=itemHTML('jul-4',T('每次面试后写复盘：被问倒的问题逐条补'));
+ h+='</div>';
+ h+='<div class="card" data-scope><div class="hd"><b>8 月 · AI 阶段 B：Python（约 25h）</b><span class="cnt"></span></div>';
+ RES_B.forEach(function(r,i){h+=resHTML('rb-'+i,r)});
+ h+='<div class="note">验收：20 分钟内用 Python 写出 LeetCode 中等题。你有 C++ 功底，两周绰绰有余。</div></div>';
+ h+='<div class="card" data-scope><div class="hd"><b>8 月起 · AI 阶段 C：机器学习（约 60h）</b><span class="cnt"></span></div>';
+ RES_C.forEach(function(r,i){h+=resHTML('rc-'+i,r)});
+ h+='<div class="note">验收：手推线性回归梯度下降；解释过拟合、正则化、数据集划分；独立训一个分类器并读懂评估指标。</div></div>';
+ h+='<div class="card"><div class="note">每周逐日安排（面试准备 / 八股 / Python / ML）在「今日」栏按日期自动出现，本栏只保留月度结构与资源。</div></div>';
+ return h;
+}
+
+function s5View(){
+ var h=stgHead(STAGES[4],TODAY>='2027-09-01'&&TODAY<'2028-03-01','s5');
+ h+='<div class="card" data-scope><div class="hd"><b>ICPC 首战（2027.09 – 12）</b><span class="cnt"></span></div>';
+ h+=itemHTML('ic-1',T('9 月网络赛：三人小队全力打，目标晋级区域赛'));
+ h+=itemHTML('ic-2',T('区域赛首战：目标银 / 铜，不硬性追金——银牌对就业已足够亮眼'));
+ h+=itemHTML('ic-3',T('赛后复盘：每场写队伍总结（配合 / 题序 / 分工），第二战的改进清单'));
+ h+='</div>';
+ h+='<div class="card" data-scope><div class="hd"><b>AI 阶段 D：深度学习（约 120h，与赛季并行，节奏放慢）</b><span class="cnt"></span></div>';
+ RES_D.forEach(function(r,i){h+=resHTML('rd-'+i,r)});
+ h+='<div class="note">验收：从零写训练循环；解释反向传播在做什么；读懂论文模型结构图。算力：Kaggle 每周 30h 免费 GPU + Colab 免费档，够用，不需要买卡。</div></div>';
+ h+='<div class="card"><div class="hd"><b>本阶段周主题（日计划按主题自动生成）</b></div>';
+ THEMES.slice(0,4).forEach(function(t){h+='<div class="mrow"><div class="mm">'+d5(t.f)+'</div><div class="mc"><b>'+t.tp+'</b><br><span style="color:#8B8478;font-size:11.5px">'+t.f+' – '+t.t+' ｜ 每日：'+t.d.map(function(x){return x.s}).join('；')+'</span></div></div>'});
+ h+='</div>';
+ return h;
+}
+
+function s6View(){
+ var h=stgHead(STAGES[5],TODAY>='2028-03-01','s6');
+ h+='<div class="card" data-scope><div class="hd"><b>AI 阶段 E：大模型本体（约 100h）</b><span class="cnt"></span></div>';
+ RES_E.forEach(function(r,i){h+=resHTML('re-'+i,r)});
+ h+='<div class="note">验收：从零实现字符级 nanoGPT 并训出合理下降的 loss；能手画 Transformer 结构图并解释注意力矩阵。</div></div>';
+ h+='<div class="card" data-scope><div class="hd"><b>AI 阶段 F：C++ × 大模型工程（你的护城河）</b><span class="cnt"></span></div>';
+ RES_F.forEach(function(r,i){h+=resHTML('rf-'+i,r)});
+ h+='<div class="note">目标岗位画像：推理引擎工程师 / AI Infra / 大模型系统工程师。JD 关键词是 C++、CUDA、性能优化、OS 与体系结构——与「只会调 API 的候选人」断层式区分。ICPC 算法 + 工程项目 + 本阶段源码能力，三者叠加即完整竞争力。</div></div>';
+ h+='<div class="card"><div class="hd"><b>本阶段周主题（日计划按主题自动生成）</b></div>';
+ THEMES.slice(4).forEach(function(t){h+='<div class="mrow"><div class="mm">'+d5(t.f)+'</div><div class="mc"><b>'+t.tp+'</b><br><span style="color:#8B8478;font-size:11.5px">'+t.f+' – '+t.t+' ｜ 每日：'+t.d.map(function(x){return x.s}).join('；')+'</span></div></div>'});
+ h+='</div>';
+ h+='<div class="card"><div class="hd"><b>秋招目标</b></div><div class="empty">推理引擎 / AI Infra / C++ 后端。<br>手里应有：区域赛奖牌、GitHub 提交热力图、WebServer 与 AI 工程两段项目经历、暑期实习经历。</div></div>';
+ return h;
+}
+
+function lhView(){
+ var h='<div class="lh-top"><div class="q">我要什么：<br>C++ 工程 × AI。</div><div class="a">现在在哪：大二，青铜起步。<br>下一步：今天的底线题。<br>主线一次只有一条，其余都是保底。</div></div>';
+ h+='<div class="card"><div class="hd"><b>计划一 ｜ 竞赛（ICPC）</b></div>';
+ h+='<div class="qa"><b>目标阶梯（不是一步登天）</b>进校队（本学期）→ 区域赛奖牌（大三）→ 金牌是冲刺上限，不是基准。术语纠正：ICPC 赛制是区域赛金 / 银 / 铜牌，没有「全国金奖」。</div>';
+ h+='<div class="qa"><b>现实定位</b>蓝桥杯省二 ≈ 省内前 10%–30%，且参赛池含大量入门选手；区域金牌 ≈ 赛区前 10%，对手多为高中 OI 背景。中间隔着搜索、图论、堆、线段树——所以按 16 周表逐日推进，不跳级。</div>';
+ h+='<div class="qa"><b>每周六一场模拟赛是命脉</b>比赛思维（限时、题序、取舍）只有比赛能练出来。刷题量决定下限，比赛决定上限。</div>';
+ h+='<div class="qa"><b>一句实话</b>区域银牌对就业已经足够亮眼；CF 1600 是合理生涯预期，达成时点大二下至大三上，不提前焦虑。</div></div>';
+ h+='<div class="card"><div class="hd"><b>计划二 ｜ 工程与实习</b></div>';
+ h+='<div class="qa"><b>路径</b>8 个月从零到简历级项目：Linux → WebServer（线程池 / epoll / 定时器 / 日志 / 连接池）→ 内存池或 STL 复刻二选一。</div>';
+ h+='<div class="qa"><b>原则</b>做深一两个，胜过铺开五六个。README 是面试官 90% 的目光所在：架构图、压测数据、已知问题。</div>';
+ h+='<div class="qa"><b>节奏</b>大二下结束投日常实习是练手（拿面试经验、暴露差距），主窗口在大三全年。</div>';
+ h+='<div class="qa"><b>市场依据</b>2026 校招技术岗中「项目经验」「开源 / GitHub」权重显著高于学历标签，C++ 位列校招岗位 TOP10（脉脉高聘《2026 名校生求职招聘洞察》）。</div></div>';
+ h+='<div class="card"><div class="hd"><b>秘密想法 ｜ AI（你判断得最对的一步）</b></div>';
+ h+='<div class="qa"><b>方向</b>C++ 工程 × AI，正是当前供给最稀缺的交叉点。</div>';
+ h+='<div class="qa"><b>依据</b>2026 年 1–5 月新发校招 AI 岗位同比增长 47.3%，大模型算法位列热招第一；但顶级算法岗高度集中于硕博——本科生的现实入口是推理优化、训练框架、AI Infra，恰好需要 C++ 与系统能力，而「只会 Python」的候选人供给过剩。这就是你 C++ 底子的真实价值。</div>';
+ h+='<div class="qa"><b>时机修正</b>不必等实习后才开始。AI 基础（数学、Python、ML）不依赖实习，与工程线互相强化。结合的正解是选定交叉点做深（llama.cpp / vLLM / CUDA），不是两摊都铺。</div></div>';
+ h+='<div class="card"><div class="hd"><b>行业依据 ｜ 数据从哪来、说明什么（2026 公开数据）</b></div>';
+ h+='<div class="qa"><b>来源一：脉脉高聘《2026 年名校生求职招聘洞察》（2026 年 7 月）</b>校招技术岗筛选中，「项目经验」「开源 / GitHub」的权重显著高于「985 / 211」学历标签；C++ 位列校招岗位需求 TOP10 语言。→ 对你的意义：两条主线（竞赛之外坚持做项目、主语言选 C++）都踩在市场信号上，不是自嗨。</div>';
+ h+='<div class="qa"><b>来源二：前程无忧《2026 届校招市场 AI 人才需求报告》</b>2026 年 1–5 月新发校招 AI 岗位同比增长 47.3%；岗位 AI 渗透率达 37.56%——超过三分之一的校招岗位已经与 AI 相关；大模型算法位列热招岗位第一。→ 对你的意义：AI 不是风口，是水位线；不学不是「稳」，是退。</div>';
+ h+='<div class="qa"><b>来源三：同报告的企业筛选标准</b>企业最看重：数学与算法基础 60.3%、项目 / 实习 / 竞赛经历 52.5%；名校学历 28.8%，仅列第五。→ 对你的意义：你攒的每一道题、每一场比赛、每一行 GitHub 提交，都是简历上比学历更硬的通货。</div>';
+ h+='<div class="qa"><b>来源四：顶级算法岗的学历分布（公开报道）</b>大模型核心算法岗 offer 高度集中于硕博（有清北博士实习生日薪 5000 元的报道）。→ 对你的意义：本科生硬闯纯算法岗是以短击长；现实入口是推理优化、训练框架、AI Infra——这些岗位的 JD 关键词是 C++、CUDA、性能优化、OS 与体系结构，恰好是你的主场，且「只会 Python」的候选人供给过剩。</div>';
+ h+='<div class="qa"><b>汇总推论（三条计划各对应一条）</b>① ICPC：算法 = 企业第一看重项（60.3%），奖牌是最便宜的信号放大器，银牌即够用。② 工程：项目权重高于学历 → 深项目 + 压测数据 + 博客，就是你的「学历替代品」。③ AI：增长确认方向，学历门槛决定你的位置在工程侧。数据支持的从来不是「AI 很热所以去做 AI」，而是「AI 的工程底座缺 C++ 人，而你恰好是」。</div></div>';
+ h+='<div class="card"><div class="hd"><b>时间分配（预先写死，避免临场纠结）</b></div>';
+ h+='<div class="qa"><b>大二上</b>竞赛主线 + 工程辅线（每周 3–5h）。校队选拔与课程冲突时，砍的是工程线，不是题量。</div>';
+ h+='<div class="qa"><b>大二下</b>工程主线 + 竞赛维持（每日 1 题 + CF 每周 1 场 + 蓝桥杯省一）。项目与蓝桥杯冲突时，砍的是新知识。</div>';
+ h+='<div class="qa"><b>大二暑假</b>项目收尾 + 投递练手 + AI 启动。</div>';
+ h+='<div class="qa"><b>大三</b>工程与 AI 主线 + ICPC 首战。取舍规则：课业 > 主线 > 保底；挂科不允许，主线不砍，砍的永远是保底。</div></div>';
+ h+='<div class="card"><div class="hd"><b>防崩三原则（执行差不是意志力问题）</b></div>';
+ h+='<div class="qa"><b>断链处理</b>断 1 天 = 正常休息日；断 2 天 = 降级「15 分钟版」（读一道题解，弄懂即打卡）；断满 1 周 = 回来找 Buddy 重排计划，不硬扛。</div>';
+ h+='<div class="qa"><b>状态差的日子</b>只做底线题，允许直接看题解学习——3 天内重做销号，这是学习不是作弊。</div>';
+ h+='<div class="qa"><b>计划是工具不是主人</b>连续两周完不成底线 = 计划制定错误，执行者无责。砍计划、降目标、保节奏。</div></div>';
+ h+='<div class="card"><div class="hd"><b>每周日 20:00 · 复盘五问（已设自动提醒）</b></div>';
+ h+='<div class="qa"><b>五问</b>① 本周 AC 几道，对照底线？② 最难一题的题号与卡点（想不出算法 / 想得出写不出 / 写得出调不对）？③ 工程线推进了什么？④ 本周最大时间黑洞？⑤ 下周底线（≤ 本周实际 × 1.1）？</div>';
+ h+='<div class="note">点「生成周报」把数据发我，我记录并跟踪趋势。连续记录两周即可画出曲线。唯一不允许的是消失。</div></div>';
+  h+='<div class="card"><div class="hd"><b>进度备份与迁移</b></div>';
+ h+='<div class="qa">打卡数据只存在你的浏览器本地。换设备 / 清缓存 / 链接变化时：旧版点「导出」得到 JSON 备份文件，新版点「导入」选择该文件即可完整恢复。</div>';
+ h+='<div style="padding:0 14px 12px;display:flex;gap:8px">';
+ h+='<button onclick="expProg()" style="flex:1;padding:9px 0;border:none;border-radius:9px;background:#185FA5;color:#fff;font-size:13px;font-weight:700">导出进度</button>';
+ h+='<button onclick="impProg()" style="flex:1;padding:9px 0;border:none;border-radius:9px;background:#E6F1FB;color:#0C447C;border:1px solid #B5D4F4;font-size:13px;font-weight:700">导入进度</button>';
+ h+='</div></div>';
+ return h;
+}
+
+var VIEWS={today:todayView,s1:s1View,s2:s2View,s3:s3View,s4:s4View,s5:s5View,s6:s6View,lh:lhView};
+var cur='today';
+function go(v){cur=v;render()}
+function render(){
+ var v=document.getElementById('view');
+ v.innerHTML=VIEWS[cur]();
+ document.getElementById('navToday').className='navend'+(cur==='today'?' on':'');
+ document.getElementById('navLh').className='navend'+(cur==='lh'?' on':'');
+ var cs=curStage();
+ document.querySelectorAll('.chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===cur)});
+ var act=document.querySelector('.chip.on');if(act)act.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+ updateHeader();
+ window.scrollTo(0,0);
+}
+(function buildStrip(){
+ var h='';
+ STAGES.forEach(function(s,i){h+='<button class="chip" data-v="'+s.id+'" data-si="'+(i+1)+'" onclick="go(\''+s.id+'\')"><b>'+s.nm+'</b>'+s.tm.replace('2026.','26.').replace('2027.','27.').replace('2028.','28.')+'</button>'});
+ document.getElementById('strip').innerHTML=h;
+})();
+
+document.addEventListener('click',function(e){
+ if(e.target.closest('a'))return;
+ var it=e.target.closest('.item');
+ if(it){var id=it.dataset.id;
+  if(done(id)){delete S.items[id];it.classList.remove('done')}
+  else{S.items[id]=1;it.classList.add('done')}
+  save();
+  var sc=it.closest('[data-scope],.card,.week');
+  if(sc){var c=sc.querySelector('.hd .cnt');if(c)c.textContent=cntOf(sc)}
+  var wk=it.closest('.week');
+  if(wk){var hd=wk.querySelector('.r1 .cnt');if(hd)hd.textContent=cntOf(wk)}
+  updateHeader();
+  if(cur==='today')renderSoon();
+  return;
+ }
+ var wh=e.target.closest('[data-wk]');
+ if(wh){wh.parentElement.classList.toggle('open');return}
+ var b=e.target.closest('[data-act]');
+ if(b){
+  if(b.dataset.act==='extra'){S.extra=(S.extra||0)+1;save();toast('已 +1（课外共 '+S.extra+' 题）。这一题算数，别小看积累。');updateHeader();renderSoon()}
+  if(b.dataset.act==='report'){makeReport()}
+ }
+});
+var _rt=null;
+function renderSoon(){clearTimeout(_rt);_rt=setTimeout(function(){if(cur==='today')render()},450)}
+
+function makeReport(){
+ var r=weekRange(TODAY);
+ var its=itemsInRange(r[0],r[1]);
+ var dn=0,tot=0,up=0,miss=[];
+ var day=DAYMAP[TODAY];
+ var lb=day&&day.lb?day.lb:(curStage().nm+' · '+curStage().tm);
+ var probs=its.filter(function(x){return x.pr});
+ var pdn=probs.filter(function(x){return done(x.id)}).length;
+ its.forEach(function(x){tot++;if(done(x.id))dn++;else if(x.dt<=TODAY)miss.push(x);if(x.dt>TODAY)up++});
+ var lines=[];
+ lines.push('【小宝周报 · '+r[0]+' – '+r[1]+'】');
+ lines.push('本周：'+lb);
+ lines.push('阶段：'+curStage().nm+'（'+curStage().tm+'）');
+ lines.push('本周完成：'+dn+' / '+tot+'（题 '+pdn+' / '+probs.length+'），剩余未到 '+up+' 项');
+ lines.push('课外加题：+'+(S.extra||0));
+ lines.push('当前段位：'+tierOf(probDone()).nm+' · '+probDone()+' 题');
+ if(miss.length){lines.push('未完成（已到期）：');miss.forEach(function(x){lines.push('✗ '+({A:'学',B:'题',C:'赛',D:'任',E:'选'})[x.it.t]+' '+(x.it.p?x.it.p+' ':'')+x.it.s)})}
+ lines.push('（发这段给 Buddy，周日 20:00 复盘用。数据不会说谎，你已经在路上了。）');
+ var txt=lines.join('\n');
+ function fallback(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('周报已复制，去发给你的 Buddy')}catch(e){window.prompt('长按全选复制：',txt)}document.body.removeChild(ta)}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){toast('周报已复制，去发给你的 Buddy')}).catch(fallback)}else fallback();
+}
+
+render();
+if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+</script>
+</body>
+</html>
